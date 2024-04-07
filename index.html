@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scroll Score</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 2147483647px; /* Pour que la page ait une longueur suffisante pour le défilement */
+  }
+  .score {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 1000;
+  }
+</style>
+</head>
+<body>
+<div class="score" id="score">0</div>
+
+<script>
+  // Fonction pour mettre à jour le score en fonction du défilement de la page
+  function updateScore() {
+    const scoreElement = document.getElementById('score');
+    const scrollPosition = window.scrollY;
+    const score = Math.floor(scrollPosition / 10); // Score augmente de 1 pour chaque 10 pixels scrollés
+    scoreElement.textContent = score;
+  }
+
+  // Mettre à jour le score lors du chargement initial
+  updateScore();
+
+  // Mettre à jour le score lors du défilement de la page
+  window.addEventListener('scroll', updateScore);
+</script>
+</body>
+</html>
