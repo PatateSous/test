@@ -1,44 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scroll Score</title>
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    height: 2147483647px; /* Pour que la page ait une longueur suffisante pour le défilement */
-  }
-  .score {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    z-index: 1000;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Problem Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        #problem, #answer {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        button {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<div class="score" id="score">0</div>
+    <h1>Math Problem Generator</h1>
+    <div id="problem"></div>
+    <input type="number" id="user-answer" placeholder="Your answer">
+    <button id="check-answer">Check Answer</button>
+    <div id="result"></div>
+    <script>
+        // Initialize variables
+        const problemElement = document.getElementById('problem');
+        const userAnswerElement = document.getElementById('user-answer');
+        const checkAnswerButton = document.getElementById('check-answer');
+        const resultElement = document.getElementById('result');
 
-<script>
-  // Fonction pour mettre à jour le score en fonction du défilement de la page
-  function updateScore() {
-    const scoreElement = document.getElementById('score');
-    const scrollPosition = window.scrollY;
-    const score = Math.floor(scrollPosition / 10); // Score augmente de 1 pour chaque 10 pixels scrollés
-    scoreElement.textContent = score;
-  }
+        let currentDifficulty = 1;
+        let correctAnswer = 0;
 
-  // Mettre à jour le score lors du chargement initial
-  updateScore();
+        // Generate a new problem
+        function generateProblem() {
+            const num1 = Math.floor(Math.random() * currentDifficulty * 10);
+            const num2 = Math.floor(Math.random() * currentDifficulty * 10);
+            const num3 = Math.floor(Math.random() * currentDifficulty * 10);
+            const operation1 = Math.floor(Math.random() * 3);
+            const operation2 = Math.floor(Math.random() * 2);
+            let problem = '';
+            let answer = 0;
 
-  // Mettre à jour le score lors du défilement de la page
-  window.addEventListener('scroll', updateScore);
-</script>
+            if (operation1 === 0) {
+                problem += `${num1} + `;
+                answer += num1;
+            } else if (operation1 === 1) {
+                problem += `${num1} - `;
+                answer += num1;
+            } else {
+                problem += `${num1} * `;
+                answer *= num1;
+            }
+
+            if (operation2 === 0) {
+                problem += `${num2} + `;
+                answer += num2;
+            } else {
+                problem += `${num2} * `;
+                answer *= num2;
+            }
+
+            problem += num3;
+            answer += num3;
+
+            correctAnswer = answer;
+            problemElement.textContent = problem;
+            userAnswerElement.value = '';
+            resultElement.textContent = '';
+        }
+
+        // Check user's answer
+        function checkAnswer() {
+            const userAnswer = parseInt(userAnswerElement.value, 10);
+            if (isNaN(userAnswer)) {
+                resultElement.textContent = 'Please enter a valid number.';
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                resultElement.textContent = 'Correct!';
+                currentDifficulty++;
+                generateProblem();
+            } else {
+                resultElement.textContent = `Wrong! The correct answer is ${correctAnswer}.`;
+            }
+        }
+
+        // Add event listeners
+        checkAnswerButton.addEventListener('click', checkAnswer);
+        generateProblem();
+    </script>
 </body>
 </html>
